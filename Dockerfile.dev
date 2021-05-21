@@ -1,3 +1,0 @@
-FROM zinen2/alpine-pigpiod
-
-ENV SHELL /bin/bash

@@ -16,9 +16,17 @@ FetchContent_Declare(
     json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
     GIT_TAG v3.9.1)
+FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG        v2.13.3)
 
 FetchContent_MakeAvailable(spdlog)
 FetchContent_MakeAvailable(json)
+FetchContent_MakeAvailable(Catch2)
+
+find_package(Threads REQUIRED)
+find_package(PahoMqttCpp REQUIRED)
 
 add_subdirectory(libs)
 

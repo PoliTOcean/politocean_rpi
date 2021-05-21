@@ -5,23 +5,21 @@
 
 #include "codable.h"
 
-using namespace std;
-
 namespace politocean {
 class Sensor : public virtual Codable {
-  string _id;
+  std::string _id;
   double _value;
 
 public:
-  Sensor(const string &id, double value);
+  Sensor(const std::string &id, double value);
 
-  void setValue(float v);
-  double getValue();
+  inline void setValue(float value) { _value = value; }
+  inline double getValue() { return _value; }
 
-  const string &getID();
+  inline const std::string &getID() { return _id; }
 
-  static Sensor parse(const string &str);
-  const string stringify();
+  static Sensor parse(const std::string &str);
+  const std::string stringify();
 };
 } // namespace politocean
 

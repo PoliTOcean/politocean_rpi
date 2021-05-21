@@ -1,21 +1,21 @@
-#include "sensor.h"
+#include "axis.h"
 #include "nlohmann/json.hpp"
-#include <iostream>
+
 #include <string>
 
 using namespace std;
 using namespace politocean;
 
-Sensor::Sensor(const string &id, double value) : _id(id), _value(value) {}
+Axis::Axis(const string &id, int value) : _id(id), _value(value) {}
 
-Sensor Sensor::parse(const string &str) {
+Axis Axis::parse(const string &str) {
   nlohmann::json j = nlohmann::json::parse(str);
 
   string id;
   double value;
 
   if (j.size() > 1)
-    throw ParsingException("Only one sensor allowed.\n");
+    throw ParsingException("Only one axis allowed.\n");
 
   try {
     id = j.begin().key();
@@ -24,10 +24,10 @@ Sensor Sensor::parse(const string &str) {
     throw ParsingException(ex.what());
   }
 
-  return Sensor(id, value);
+  return Axis(id, value);
 }
 
-const string Sensor::stringify() {
+const string Axis::stringify() {
   nlohmann::json j;
 
   j[_id] = _value;

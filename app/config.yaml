@@ -1,0 +1,19 @@
+pinout:
+  NIPPER_DIR: 23
+  NIPPER_PWM: 24
+  SHOULDER_EN: 22
+  SHOULDER_DIR: 27
+  SHOULDER_STEP: 17
+  WRIST_EN: 21
+  WRIST_DIR: 20
+  WRIST_STEP: 16
+  CAMERA_EN: 5
+  CAMERA_DIR: 6
+  CAMERA_STEP: 13
+  LIGHTS_DIR: 0
+  LIGHTS_PWM: 0
+  POWER: 18
+
+mqtt:
+  id: "raspberry-pi"
+  address: "169.254.190.141"

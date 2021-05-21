@@ -1,9 +1,11 @@
 #ifndef DCMOTOR_H
 #define DCMOTOR_H
 
-#include "pi.h"
+#include "pitypes.h"
 
-#include "spdlog/spdlog.h"
+#include <condition_variable>
+#include <mutex>
+#include <thread>
 
 namespace politocean::pi {
 class DCMotor {
@@ -11,8 +13,9 @@ class DCMotor {
 
 public:
   DCMotor(pin_t dirPin, pin_t pwmPin);
+  ~DCMotor();
 
-  void run(Dir dir, uint8_t speed);
+  void run(Direction dir, uint8_t speed);
   void stop();
 };
 } // namespace politocean::pi
