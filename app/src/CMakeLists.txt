@@ -17,4 +17,6 @@ target_link_libraries(app PRIVATE
     pigpio
     yaml-cpp
     politocean::dcmotor
-    politocean::stepper)
+    politocean::stepper
+    politocean::axis
+    politocean::command)

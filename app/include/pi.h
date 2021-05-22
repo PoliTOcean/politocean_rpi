@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "arm.h"
 
@@ -17,7 +18,11 @@ class Pi {
   politocean::MQTTConfig _mqttConfig;
   politocean::MQTTClient *_mqttClient;
 
+  std::vector<uint8_t> _spiAxis, _spiCommand;
+
   void _configure(const std::string &path);
+  void _handleAxis(const std::string &str);
+  void _handleCommand(const std::string &str);
 
 public:
   Pi();

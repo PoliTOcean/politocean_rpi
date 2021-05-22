@@ -5,6 +5,8 @@
 #include "politocean/pi/pinout.h"
 #include "politocean/pi/pitypes.h"
 #include "politocean/pi/stepper.h"
+#include "politocean/command.h"
+#include "politocean/axis.h"
 
 #include "mqtt/async_client.h"
 #include "yaml-cpp/yaml.h"
@@ -13,6 +15,8 @@
 #include <map>
 
 using namespace std;
+using namespace actions;
+using namespace politocean;
 using namespace politocean::pi;
 
 const string DFLT_CONFIG_PATH = "./";
@@ -54,4 +58,21 @@ void Pi::_configure(const string &path) {
   _mqttConfig.address = config["mqtt"]["address"].as<string>();
 
   _configured = true;
+}
+
+void Pi::_handleAxis(const string &str) {
+  Axis axis = Axis::parse(str);
+  const string currentAxisID = axis.getID();
+  const int currentAxisValue = axis.getValue();
+  //prepare _spiAxis
+}
+
+void Pi::_handleCommand(const string &str) {
+  Command command = Command::parse(str);
+  const string currentAction = command.getAction();
+  if (actionToID.at(currentAction) == 5 || actionToID.at(currentAction) == 7) { // TOGGLE ARM - TOGGLE POWER
+    //rpi
+  } else {
+    //prepare _spiCommand
+  }
 }
