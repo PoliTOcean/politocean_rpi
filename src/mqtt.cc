@@ -1,5 +1,6 @@
 #include <functional>
 #include <map>
+#include <string>
 
 #include "mqtt.h"
 #include "mqtt/async_client.h"
@@ -12,12 +13,12 @@ void MQTTClient::callback::reconnect() {
   try {
     cli_.connect(connOpts_, nullptr, *this);
   } catch (const mqtt::exception &exc) {
-    spdlog::critical("Error: {}", exc.what());
+    spdlog::critical("[MQTT] Error: {}", exc.what());
   }
 }
 
 void MQTTClient::callback::on_failure(const mqtt::token &tok) {
-  spdlog::error("Connection attempt failed");
+  spdlog::error("[MQTT] Connection attempt failed");
   if (++nretry_ > N_RETRY_ATTEMPTS)
     exit(1);
   reconnect();
@@ -26,24 +27,24 @@ void MQTTClient::callback::on_failure(const mqtt::token &tok) {
 void MQTTClient::callback::on_success(const mqtt::token &tok) {}
 
 void MQTTClient::callback::connected(const std::string &cause) {
-  spdlog::info("Connection success");
+  spdlog::info("[MQTT] Connection success");
 
   for (auto f : functions_) {
-    spdlog::info("Subscribed to {}", f.first);
+    spdlog::debug("[MQTT] Subscribed to {}", f.first);
     cli_.subscribe(f.first, QOS);
   }
 }
 
 void MQTTClient::callback::connection_lost(const std::string &cause) {
-  spdlog::error("Connection lost");
-  spdlog::info("Reconnecting...");
+  spdlog::error("[MQTT] Connection lost");
+  spdlog::info("[MQTT] Reconnecting...");
   nretry_ = 0;
   reconnect();
 }
 
 void MQTTClient::callback::message_arrived(mqtt::const_message_ptr msg) {
   std::string topic = msg->get_topic();
-  spdlog::info("Message arrived on topic {}", topic);
+  spdlog::debug("[MQTT] Message arrived on topic {}", topic);
 
   for (auto f : functions_) {
     if (topic == f.first) {
@@ -62,15 +63,9 @@ MQTTClient::callback::callback(
 MQTTClient::MQTTClient(const std::string &address, const std::string &id)
     : _mqtt(address, id), _connOpts(), _cb(_mqtt, _connOpts, _callbacks) {
   _connOpts.set_clean_session(false);
+  _connOpts.set_keep_alive_interval(0);
   _mqtt.set_callback(_cb);
-}
-
-void MQTTClient::subscribeTo(
-    const std::string &topic,
-    const std::function<void(const std::string &)> &fn) {
-  _callbacks.insert(
-      std::pair<std::string, std::function<void(const std::string &)>>(topic,
-                                                                       fn));
+  spdlog::debug("[MQTT] Connected to {} with id {}", address, id);
 }
 
 void MQTTClient::unsubscribeTo(const std::string &topic) {

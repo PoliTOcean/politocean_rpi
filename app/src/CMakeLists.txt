@@ -16,5 +16,6 @@ target_compile_features(app PRIVATE cxx_std_17)
 target_link_libraries(app PRIVATE
     pigpio
     yaml-cpp
-    politocean::dcmotor
-    politocean::stepper)
+    politocean::base
+    politocean::pi
+    spdlog::spdlog)

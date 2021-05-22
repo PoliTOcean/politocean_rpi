@@ -49,8 +49,21 @@ class MQTTClient {
 public:
   MQTTClient(const std::string &address, const std::string &id);
 
+  template <class T>
+  void subscribeTo(const std::string &topic, void (T::*pf)(const std::string &),
+                   T *obj) {
+    _callbacks.insert(
+        std::pair<std::string, std::function<void(const std::string &)>>(
+            topic, (std::function<void(const std::string &)>)std::bind(
+                       pf, obj, std::placeholders::_1)));
+  }
+
   void subscribeTo(const std::string &topic,
-                   const std::function<void(const std::string &)> &fn);
+                   std::function<void(const std::string &)> fn) {
+    _callbacks.insert(
+        std::pair<std::string, std::function<void(const std::string &)>>(topic,
+                                                                         fn));
+  }
   void unsubscribeTo(const std::string &topic);
 
   void connect();

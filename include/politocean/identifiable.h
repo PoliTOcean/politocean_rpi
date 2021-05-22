@@ -6,13 +6,11 @@
 
 #include "exception.h"
 
-using namespace std;
-
 namespace politocean {
 using namespace exception;
 class Identifiable {
 public:
-  virtual const string &getID() const {
+  virtual const std::string &getID() const {
     throw NotImplementedException("Method getID has not been implemented.");
   }
 };

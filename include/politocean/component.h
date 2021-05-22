@@ -6,22 +6,20 @@
 
 #include <string>
 
-using namespace std;
-
 namespace politocean::component {
 enum class State { Disabled, Enabled };
 
 class Component : public virtual Stateful<State>, public virtual Identifiable {
-  string _id;
+  std::string _id;
   State _state;
 
 public:
-  Component(string id) : _id(id), _state(State::Disabled){};
+  Component(std::string id) : _id(id), _state(State::Disabled){};
 
   inline State getState() const { return _state; };
   inline void setState(const State &state) { _state = state; };
 
-  inline const string &getID() const { return _id; };
+  inline const std::string &getID() const { return _id; };
 };
 } // namespace politocean::component
 

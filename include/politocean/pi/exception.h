@@ -13,6 +13,15 @@ public:
 
   virtual const char *what() const throw() { return _str.c_str(); }
 };
-} // namespace politocean::exception
+
+class SPIException : public std::exception {
+  std::string _str;
+
+public:
+  SPIException(const std::string &str) : _str(str) {}
+
+  virtual const char *what() const throw() { return _str.c_str(); }
+};
+} // namespace politocean::pi::exception
 
 #endif // PI_EXCEPTION_H

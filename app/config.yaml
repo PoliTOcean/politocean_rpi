@@ -16,4 +16,4 @@ pinout:
 
 mqtt:
   id: "raspberry-pi"
-  address: "169.254.190.141"
+  address: "tcp://169.254.189.112:1883"

@@ -1,8 +1,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch2/catch.hpp"
 
+#include "politocean/constants.h"
 #include "politocean/sensor.h"
 #include <string>
+#include <vector>
 
 using namespace std;
 using namespace politocean;
@@ -12,6 +14,8 @@ const double SENSOR_VALUE = 10.5;
 
 const string SENSOR_STRINGIFIED = "{\"temperature\":10.5}";
 const string SENSOR_STRINGIFIED_TWO = "{\"temperature\":10.5,\"depth\":20.5}";
+const vector<char> SENSOR_SERIALIZED = {constants::sensors::value::kTemperature,
+                                        10, 50};
 
 const string ONLY_ONE_SENSOR_ALLOWED = "Only one sensor allowed.\n";
 
@@ -44,4 +48,10 @@ TEST_CASE("Parse more than one sensor", "sensor") {
   }
 
   REQUIRE(exception_caught == true);
+}
+
+TEST_CASE("Serialize a sensor", "sensor") {
+  vector<char> s = sensor.serialize();
+
+  REQUIRE(s == SENSOR_SERIALIZED);
 }

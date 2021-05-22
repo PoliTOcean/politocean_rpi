@@ -22,6 +22,24 @@ public:
 
   virtual const char *what() const throw() { return _str.c_str(); }
 };
+
+class SerilizingException : public std::exception {
+  std::string _str;
+
+public:
+  SerilizingException(const std::string &str) : _str(str) {}
+
+  virtual const char *what() const throw() { return _str.c_str(); }
+};
+
+class DeserilizingException : public std::exception {
+  std::string _str;
+
+public:
+  DeserilizingException(const std::string &str) : _str(str) {}
+
+  virtual const char *what() const throw() { return _str.c_str(); }
+};
 } // namespace politocean::exception
 
 #endif // EXCEPTION_H

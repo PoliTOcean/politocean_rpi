@@ -5,8 +5,9 @@ target_link_libraries(pi_test PRIVATE
     Catch2::Catch2
     pigpio
     yaml-cpp
-    politocean::dcmotor
-    politocean::stepper
+    politocean::base
+    politocean::pi
+    spdlog::spdlog
 )
 target_include_directories(pi_test PRIVATE "${politocean_sdk_SOURCE_DIR}/include" "${politocean_sdk_SOURCE_DIR}/app/include")
 target_compile_features(pi_test PUBLIC cxx_std_17)

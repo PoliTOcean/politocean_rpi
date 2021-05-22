@@ -10,6 +10,7 @@
 namespace politocean::pi {
 class DCMotor {
   pin_t _dirPin, _pwmPin;
+  bool _running = false;
 
 public:
   DCMotor(pin_t dirPin, pin_t pwmPin);
@@ -17,6 +18,7 @@ public:
 
   void run(Direction dir, uint8_t speed);
   void stop();
+  inline bool isRunning() { return _running; };
 };
 } // namespace politocean::pi
 

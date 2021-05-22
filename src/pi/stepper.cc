@@ -1,6 +1,6 @@
 #include "pigpio.h"
 
-#include "excepion.h"
+#include "exception.h"
 #include "stepper.h"
 
 #include <chrono>
@@ -8,12 +8,12 @@
 #include <thread>
 
 using namespace politocean::pi;
-using namespace politocean::pi::exception;
 
 Stepper::Stepper(pin_t enPin, pin_t dirPin, pin_t stepPin)
     : _enPin(enPin), _dirPin(dirPin), _stepPin(stepPin) {
   if (gpioInitialise() < 0) {
-    throw GPIOException("PiGPIO initialisation failed in Stepper.\n");
+    throw exception::GPIOException(
+        "PiGPIO initialisation failed in Stepper.\n");
   }
 
   gpioSetMode(enPin, PI_OUTPUT);
@@ -24,37 +24,59 @@ Stepper::Stepper(pin_t enPin, pin_t dirPin, pin_t stepPin)
 Stepper::~Stepper() { disable(); }
 
 void Stepper::enable() {
+  if (_enabled) {
+    return;
+  }
+
   if (gpioInitialise() < 0) {
-    throw GPIOException("PiGPIO initialisation failed in Stepper::enable.\n");
+    throw exception::GPIOException(
+        "PiGPIO initialisation failed in Stepper::enable.\n");
   }
 
   gpioWrite(_enPin, PI_HIGH);
+
+  _enabled = true;
 }
 
 void Stepper::disable() {
+  if (!_enabled) {
+    return;
+  }
+
   if (gpioInitialise() < 0) {
-    throw GPIOException("PiGPIO initialisation failed in Stepper::disable.\n");
+    throw exception::GPIOException(
+        "PiGPIO initialisation failed in Stepper::disable.\n");
   }
 
   stop();
 
   gpioWrite(_enPin, PI_LOW);
+
+  _enabled = false;
 }
 
 void Stepper::run(Direction dir, unsigned int frequency) {
+  if (_running) {
+    return;
+  }
+
   if (gpioInitialise() < 0) {
-    throw GPIOException("PiGPIO initialisation failed in Stepper::run.\n");
+    throw exception::GPIOException(
+        "PiGPIO initialisation failed in Stepper::run.\n");
   }
 
   gpioWrite(_dirPin, to_underlying(dir));
 
   gpioSetPWMfrequency(_stepPin, frequency);
   gpioPWM(_stepPin, gpioGetPWMrange(_stepPin) / 2);
+
+  _running = true;
 }
 
 void Stepper::step(Direction dir) {
   if (gpioInitialise() < 0) {
-    throw GPIOException("PiGPIO initialisation failed in Stepper::run.\n");
+    throw exception::GPIOException(
+        "PiGPIO initialisation failed in Stepper::run.\n");
   }
 
   gpioWrite(_dirPin, to_underlying(dir));
@@ -69,10 +91,17 @@ void Stepper::step(Direction dir) {
 }
 
 void Stepper::stop() {
+  if (!_running) {
+    return;
+  }
+
   if (gpioInitialise() < 0) {
-    throw GPIOException("PiGPIO initialisation failed in Stepper::run.\n");
+    throw exception::GPIOException(
+        "PiGPIO initialisation failed in Stepper::run.\n");
   }
 
   gpioWrite(_dirPin, PI_LOW);
   gpioPWM(_stepPin, 0);
+
+  _running = false;
 }
